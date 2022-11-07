@@ -1,3 +1,4 @@
+#!/bin/bash
 for i in {1..10}
 do
     vm_num=`printf "%02d" $i`

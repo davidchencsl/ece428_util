@@ -1,8 +1,16 @@
 #!/bin/bash
+if [ $# -ge 2 ]
+then
+    start=$2
+    end=$3
+else
+    start=1
+    end=10
+fi
 
 input=$1
 
-for i in {1..10}
+for i in $(seq $start $end)
 do
     vm_num=`printf "%02d" $i`
     echo "Running VM $vm_num"

@@ -1,27 +1,3 @@
-batch_run.sh "git clone https://sc60:Csl5432112345@gitlab.engr.illinois.edu/sc60/ece428_mp1.git"
-
-batch_run.sh "cd ece428_mp1 && git pull"
-
-batch_run.sh "cd ece428_mp1 && git pull && cd src && git reset --hard HEAD && javac Client.java && javac Worker.java && javac LogMaker.java"
-
-batch_run.sh "java -cp ece428_mp1/src LogMaker"
-
-batch_run.sh "nohup java -cp ece428_mp1/src Worker < /dev/null > out.log 2>&1 &"
-
-batch_run.sh "pkill java"
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
-~/code/ece428/mp1/build.sh && batch_scp.sh ~/code/ece428/mp1/build
-
-batch_run.sh "java -cp build LogMaker"
-
-batch_run.sh "nohup java -cp build Worker < /dev/null > out.log 2>&1 &"
-
-batch_run.sh "pkill java"
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
 ./gradlew build && batch_scp.sh app/build/classes/java/main/ 
 
 connect.sh 01 "nohup java -cp main mp2.Introducer < /dev/null > /tmp/introducer.log 2>&1 &"
@@ -29,3 +5,19 @@ connect.sh 01 "nohup java -cp main mp2.Introducer < /dev/null > /tmp/introducer.
 single_run.sh "nohup java -cp main mp2.Worker < /dev/null > /tmp/worker.log 2>&1 &"
 
 batch_run.sh "pkill java"
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+./gradlew build -Pmain=Node && batch_scp.sh app/build/distributions/app.zip
+
+batch_run.sh "rm -rf app && unzip app.zip && rm -rf app.zip"
+
+connect.sh 01 "nohup java -cp app/lib/app.jar:app/lib/* mp3.Introducer < /dev/null > /dev/null 2>&1 &"
+
+batch_run.sh "nohup java -cp app/lib/app.jar:app/lib/* mp3.Node < /dev/null > /dev/null 2>&1 &" 4 10
+
+batch_run.sh "pkill java"
+
+put mp3_data/file1 1
+
+connect.sh 10 "pkill java" & connect.sh 08 "pkill java" & connect.sh 04 "pkill java" &
