@@ -21,3 +21,34 @@ batch_run.sh "pkill java"
 put mp3_data/file1 1
 
 connect.sh 10 "pkill java" & connect.sh 08 "pkill java" & connect.sh 04 "pkill java" &
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+./gradlew build && batch_scp.sh app/build/distributions/app.zip
+
+batch_run.sh "rm -rf app && unzip app.zip && rm -rf app.zip"
+
+connect.sh 01 "nohup java -cp app/lib/app.jar:app/lib/* sdfs.Introducer < /dev/null > /dev/null 2>&1 &"
+
+java -cp app/lib/app.jar:app/lib/* idunno.IDunno
+
+batch_run.sh "nohup java -cp app/lib/app.jar:app/lib/* idunno.IDunno < /dev/null > /dev/null 2>&1 &" 3 10
+
+batch_run.sh "pkill java"
+
+load_dataset image_net_validate
+
+train resnet18
+
+train alexnet
+
+inference alexnet
+
+inference resnet18
+
+status
+
+get_result 1 resnet18_out
+
+get_result 0 alexnet_out

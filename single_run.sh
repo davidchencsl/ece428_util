@@ -17,4 +17,5 @@ do
     sshpass -p "Csl5432112345" \
     ssh -o StrictHostKeyChecking=no \
     sc60@fa22-cs425-35$vm_num.cs.illinois.edu $input
+    sleep 5
 done
